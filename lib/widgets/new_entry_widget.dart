@@ -39,8 +39,8 @@ class NewEntryWidget extends StatelessWidget {
           hintText: "Create Entry",
           suffixIcon: IconButton(
               onPressed: () {
-                EntryData()
-                    .writeEntry(controller.text)
+                vm
+                    .addEntry(controller.text)
                     .then((value) => updateEntries!(title: 'Home', vm: vm));
                 FocusManager.instance.primaryFocus?.unfocus();
                 controller.clear();

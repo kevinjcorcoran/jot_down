@@ -4,25 +4,25 @@
             "id": 123,
             "time": "2018-03-05T13:49:51.141Z",
             "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation #school laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat #travel non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            "trashed": false
+            "trash": false
         },
         {
             "id": 456,
             "time": "2018-12-10T13:49:51.141Z",
             "content": "Lorem ipsum #school dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad veniam.",
-            "trashed": false
+            "trash": false
         },
         {
             "id": 789,
             "time": "2018-10-25T13:49:51.141Z",
             "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.",
-            "trashed": false
+            "trash": false
         },
         {
             "id": 901,
             "time": "2018-10-25T13:49:51.141Z",
             "content": "Lorem ipsum dolor sit amet. #travel",
-            "trashed": false
+            "trash": false
         }
     ]
 }

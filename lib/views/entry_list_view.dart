@@ -22,7 +22,7 @@ class _EntryListViewState extends State<EntryListView> {
       DateTime? end,
       EntryListViewModel? vm}) {
     this.title = title;
-    vm?.fetchEntries(keyword: keyword, start: start, end: end);
+    vm?.updateShownEntries(keyword: keyword, start: start, end: end);
   }
 
   // Controller used to track input throughout the app
@@ -37,7 +37,6 @@ class _EntryListViewState extends State<EntryListView> {
   @override
   Widget build(BuildContext context) {
     final entryListVm = Provider.of<EntryListViewModel>(context);
-    
     return Scaffold(
       appBar: AppBar(
         title: Text(title),

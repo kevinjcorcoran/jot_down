@@ -1,5 +1,6 @@
 import 'package:jot_down/models/entry.dart';
 
+/// Provides methods to indirectly interact with [Entry] objects.
 class EntryViewModel {
   final Entry entry;
 
@@ -17,7 +18,7 @@ class EntryViewModel {
     return entry.content;
   }
 
-  bool get trashed {
-    return entry.trashed;
+  bool get trash {
+    return entry.trash;
   }
 }

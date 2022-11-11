@@ -23,13 +23,18 @@ class EntryData {
       final file = await _localFile;
       final fileContents = await file.readAsString();
       final Iterable json = jsonDecode(fileContents);
-      return json.map((entry) => Entry.fromJson(entry)).toList(); 
+      return json.map((entry) => Entry.fromJson(entry)).toList();
     } catch (e) {
       return [];
     }
   }
 
-  Future<File> writeEntry(String content) async {
+  Future<Entry> addEntry(String content) async {
+    Map<String, dynamic> entryJson = await writeEntry(content);
+    return Entry.fromJson(entryJson);
+  }
+
+  Future<Map<String, dynamic>> writeEntry(String content) async {
     var json = [];
 
     final file = await _localFile;
@@ -42,9 +47,10 @@ class EntryData {
     newEntry['id'] = uuid.v1();
     newEntry['time'] = DateTime.now().toIso8601String();
     newEntry['content'] = content;
-    newEntry['trashed'] = false;
+    newEntry['trash'] = false;
 
     json.add(newEntry);
-    return await file.writeAsString(jsonEncode(json));
+    await file.writeAsString(jsonEncode(json));
+    return newEntry;
   }
 }

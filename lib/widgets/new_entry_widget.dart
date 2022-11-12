@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hashtagable/widgets/hashtag_text_field.dart';
 import 'package:jot_down/view_models/entry_list_view_model.dart';
-import 'package:jot_down/entry_data.dart';
 
 class NewEntryWidget extends StatelessWidget {
   // The view movel used throughout the app
   final EntryListViewModel vm;
   // Updates the view model when changes are made
-  final Function(
-      {String title,
-      String keyword,
-      DateTime? start,
-      DateTime? end,
-      EntryListViewModel vm})? updateEntries;
+  final Function({String title, String keyword})? updateView;
   // The controller that tracks input throughout the app
   final TextEditingController controller;
 
   const NewEntryWidget(
-      {required this.updateEntries,
+      {super.key,
+      required this.updateView,
       required this.vm,
       required this.controller});
 
@@ -26,6 +21,10 @@ class NewEntryWidget extends StatelessWidget {
     return HashTagTextField(
       controller: controller,
       scrollPadding: const EdgeInsets.all(5.0),
+      decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
+      basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
+      keyboardType: TextInputType.multiline,
+      maxLines: null,
       decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
             borderSide:
@@ -35,21 +34,17 @@ class NewEntryWidget extends StatelessWidget {
             borderSide:
                 BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
           ),
-          contentPadding: EdgeInsets.only(left: 10),
+          contentPadding: const EdgeInsets.only(left: 10),
           hintText: "Create Entry",
           suffixIcon: IconButton(
               onPressed: () {
                 vm
                     .addEntry(controller.text)
-                    .then((value) => updateEntries!(title: 'Home', vm: vm));
+                    .then((value) => updateView!(title: 'Home'));
                 FocusManager.instance.primaryFocus?.unfocus();
                 controller.clear();
               },
               icon: const Icon(Icons.send))),
-      decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
-      basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
-      keyboardType: TextInputType.multiline,
-      maxLines: null,
     );
   }
 }

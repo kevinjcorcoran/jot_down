@@ -30,13 +30,20 @@ class EntryListViewModel extends ChangeNotifier {
   /// and [end] date. [keyword] is used to extract both standard string searches
   /// and hashtag extraction.
   void updateShownEntries(
-      {String keyword = '', DateTime? start, DateTime? end}) {
-    shownEntries =
-        entries.where((entry) => entry.content.contains(keyword)).toList();
+      {String keyword = '',
+      DateTime? start,
+      DateTime? end,
+      bool trash = false}) {
+    shownEntries = entries
+        .where(
+            (entry) => entry.content.contains(keyword) && entry.trash == trash)
+        .toList()
+      ..sort((b, a) => a.time
+          .compareTo(b.time)); //TODO: this sorting will have to be dynamic
     notifyListeners();
   }
 
-  /// Creates a new entry, updates [entries] and [tags], and updates [shownEntries].
+  /// Creates a new entry and adds it to [entries] and [tags], then updates [shownEntries].
   Future<void> addEntry(String content) async {
     EntryViewModel entry =
         EntryViewModel(entry: await EntryData().addEntry(content));

@@ -18,7 +18,15 @@ class EntryViewModel {
     return entry.content;
   }
 
+  set content(String newValue) {
+    entry.content = newValue;
+  }
+
   bool get trash {
     return entry.trash;
+  }
+
+  set trash(bool newValue) {
+    entry.trash = newValue;
   }
 }

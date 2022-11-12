@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:jot_down/view_models/entry_list_view_model.dart';
 
 class DrawerItemsWidget extends StatelessWidget {
-  // The view movel used throughout the app
-  final EntryListViewModel vm;
+  /// The set of tags to show in the drawer
+  final Set<String> tags;
   // Updates the view model when changes are made
-  final Function(
-      {String title,
-      String keyword,
-      DateTime? start,
-      DateTime? end,
-      EntryListViewModel vm})? updateEntries;
+  final Function({String title, String keyword, bool trash})? updateView;
 
-  const DrawerItemsWidget({required this.updateEntries, required this.vm});
+  const DrawerItemsWidget(
+      {super.key, required this.updateView, required this.tags});
 
   @override
   Widget build(BuildContext context) {
-    Set<String> tags = vm.tags;
     return ListView.builder(
       itemCount: tags.length + 2,
       itemBuilder: (context, index) {
@@ -27,7 +21,7 @@ class DrawerItemsWidget extends StatelessWidget {
               leading: const Icon(Icons.home),
               title: const Text('Home', style: TextStyle(fontSize: 20)),
               onTap: () {
-                updateEntries!(title: 'Home', vm: vm);
+                updateView!(title: 'Home');
                 Navigator.pop(context);
               });
         }
@@ -38,7 +32,7 @@ class DrawerItemsWidget extends StatelessWidget {
               leading: const Icon(Icons.delete),
               title: const Text('Trash', style: TextStyle(fontSize: 20)),
               onTap: () {
-                // TODO: updateEntries!(title: 'Trash', vm: vm TRASH BOOL)
+                updateView!(title: 'Trash', trash: true);
                 Navigator.pop(context);
               });
         }
@@ -49,7 +43,7 @@ class DrawerItemsWidget extends StatelessWidget {
             title: Text(tag,
                 style: const TextStyle(fontSize: 20, color: Colors.blue)),
             onTap: () {
-              updateEntries!(title: tag, keyword: tag, vm: vm);
+              updateView!(title: tag, keyword: tag);
               Navigator.pop(context);
             });
       },

@@ -53,4 +53,21 @@ class EntryData {
     await file.writeAsString(jsonEncode(json));
     return newEntry;
   }
+
+  Future<void> editEntry(
+      String id, String content, DateTime time, bool trash) async {
+    var json = [];
+
+    final file = await _localFile;
+    if (await file.exists()) {
+      final fileContents = await file.readAsString();
+      json = jsonDecode(fileContents);
+    }
+
+    var entry = json.firstWhere((element) => element['id'] == id);
+    entry['content'] = content;
+    entry['trash'] = trash;
+    entry['time'] = time.toIso8601String();
+    await file.writeAsString(jsonEncode(json));
+  }
 }

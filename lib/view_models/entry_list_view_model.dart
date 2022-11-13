@@ -51,4 +51,16 @@ class EntryListViewModel extends ChangeNotifier {
     tags.addAll(extractHashTags(entry.content));
     updateShownEntries();
   }
+
+  Future<void> editEntry(
+      {required EntryViewModel entry,
+      required String content,
+      required DateTime time,
+      required bool trash}) async {
+    entry.content = content;
+    entry.time = time;
+    entry.trash = trash;
+    EntryData()
+        .editEntry(entry.id, content, time, trash);
+  }
 }

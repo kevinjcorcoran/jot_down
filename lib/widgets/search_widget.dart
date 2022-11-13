@@ -43,7 +43,7 @@ class SearchWidget extends SearchDelegate {
     vm.updateShownEntries(keyword: query);
 
     return EntryListWidget(
-        shownEntries: vm.shownEntries, updateView: updateView, inSearch: true);
+        vm: vm, updateView: updateView, inSearch: true);
   }
 
   /// Shows suggestions based on comparing the current text in the search bar

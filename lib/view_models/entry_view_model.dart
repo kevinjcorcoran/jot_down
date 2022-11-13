@@ -14,6 +14,10 @@ class EntryViewModel {
     return entry.time;
   }
 
+  set time(DateTime newValue) {
+    entry.time = newValue;
+  }
+
   String get content {
     return entry.content;
   }

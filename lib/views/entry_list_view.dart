@@ -74,8 +74,8 @@ class EntryListViewState extends State<EntryListView> {
       body: Column(children: [
         Expanded(
             child: EntryListWidget(
+          vm: entryListVm,
           updateView: updateView,
-          shownEntries: entryListVm.shownEntries,
         )),
         Container(
             padding: const EdgeInsets.all(10),

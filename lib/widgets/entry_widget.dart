@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hashtagable/hashtagable.dart';
+import 'package:jot_down/view_models/entry_list_view_model.dart';
 import 'package:jot_down/view_models/entry_view_model.dart';
 import 'package:intl/intl.dart';
 
 class EntryWidget extends StatelessWidget {
   // The entry associated with this widget
   final EntryViewModel entry;
+  // The view model shared by the app
+  final EntryListViewModel vm;
   // Updates the view model when changes are made
   final Function({String title, String keyword})? updateView;
+
   /// Signifies if search widget is open, if so, pop the context on tag click to
   /// close the search
   bool inSearch;
 
   EntryWidget(
       {super.key,
+      required this.vm,
       required this.entry,
       required this.updateView,
       this.inSearch = false});
@@ -47,7 +52,11 @@ class EntryWidget extends StatelessWidget {
                     constraints: const BoxConstraints(),
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      entry.trash = true;
+                      vm.editEntry(
+                          entry: entry,
+                          content: entry.content,
+                          time: entry.time,
+                          trash: true);
                       updateView!(title: "Home");
                     }),
                 IconButton(

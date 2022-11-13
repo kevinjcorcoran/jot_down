@@ -20,9 +20,6 @@ class EntryListViewModel extends ChangeNotifier {
   Future<void> fetchEntries() async {
     final results = await EntryData().fetchEntries();
     entries = results.map((item) => EntryViewModel(entry: item)).toList();
-    for (var entry in entries) {
-      tags.addAll(extractHashTags(entry.content));
-    }
     updateShownEntries();
   }
 
@@ -41,6 +38,9 @@ class EntryListViewModel extends ChangeNotifier {
         .toList()
       ..sort((b, a) => a.time
           .compareTo(b.time)); //TODO: this sorting will have to be dynamic
+    for (var entry in shownEntries) {
+      tags.addAll(extractHashTags(entry.content));
+    }
     notifyListeners();
   }
 

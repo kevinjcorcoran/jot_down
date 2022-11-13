@@ -3,7 +3,7 @@ import 'package:jot_down/view_models/entry_list_view_model.dart';
 import 'package:jot_down/widgets/entry_list_widget.dart';
 
 class SearchWidget extends SearchDelegate {
-  final Function({String title, String keyword})? updateView;
+  final Function({String title, String keyword, bool trash})? updateView;
   SearchWidget({required this.updateView});
   /// Search has its own viewmodel to prevent it from affecting the rest of the 
   /// app's state
@@ -53,7 +53,7 @@ class SearchWidget extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     vm.fetchEntries();
     Set<String> matchQuery = {};
-    for (var entry in vm.entries) {
+    for (var entry in vm.shownEntries) {
       List<String> content = entry.content.toLowerCase().split(' ');
       matchQuery.addAll(content.where((word) => word.startsWith(query)));
     }

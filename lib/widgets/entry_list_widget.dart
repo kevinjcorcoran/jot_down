@@ -7,7 +7,7 @@ class EntryListWidget extends StatelessWidget {
   /// The entries to show in the list
   final EntryListViewModel vm;
   // Updates the view model when changes are made
-  final Function({String title, String keyword})? updateView;
+  final Function({String title, String keyword, bool trash})? updateView;
   /// Signifies is the search widget is open. Not required as it is only used
   /// by SearchWidget
   bool inSearch;

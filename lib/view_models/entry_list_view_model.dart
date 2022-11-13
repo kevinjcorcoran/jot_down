@@ -35,8 +35,9 @@ class EntryListViewModel extends ChangeNotifier {
       DateTime? end,
       bool trash = false}) {
     shownEntries = entries
-        .where(
-            (entry) => entry.content.contains(keyword) && entry.trash == trash)
+        .where((entry) =>
+            entry.content.toLowerCase().contains(keyword.toLowerCase()) &&
+            entry.trash == trash)
         .toList()
       ..sort((b, a) => a.time
           .compareTo(b.time)); //TODO: this sorting will have to be dynamic
@@ -60,7 +61,6 @@ class EntryListViewModel extends ChangeNotifier {
     entry.content = content;
     entry.time = time;
     entry.trash = trash;
-    EntryData()
-        .editEntry(entry.id, content, time, trash);
+    EntryData().editEntry(entry.id, content, time, trash);
   }
 }

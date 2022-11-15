@@ -39,7 +39,9 @@ class EntryListViewModel extends ChangeNotifier {
       ..sort((b, a) => a.time
           .compareTo(b.time)); //TODO: this sorting will have to be dynamic
     for (var entry in shownEntries) {
-      tags.addAll(extractHashTags(entry.content));
+      if (entry.trash == false) {
+        tags.addAll(extractHashTags(entry.content));
+      }
     }
     notifyListeners();
   }

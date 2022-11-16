@@ -24,7 +24,8 @@ class NewEntryWidget extends StatelessWidget {
       decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
       basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
       keyboardType: TextInputType.multiline,
-      maxLines: null,
+        minLines: 1,
+        maxLines: 10,
       decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
             borderSide:

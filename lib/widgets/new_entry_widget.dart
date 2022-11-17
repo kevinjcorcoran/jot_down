@@ -19,33 +19,33 @@ class NewEntryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HashTagTextField(
-        controller: controller,
-        scrollPadding: const EdgeInsets.all(5.0),
-        decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
-        basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
-        keyboardType: TextInputType.multiline,
-        minLines: 1,
-        maxLines: 10,
-        decoration: InputDecoration(
-            enabledBorder: const OutlineInputBorder(
-              borderSide:
-              BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide:
-              BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
-            ),
-            contentPadding: const EdgeInsets.only(left: 10),
-            hintText: "I want to remember...",
-            suffixIcon: IconButton(
-                onPressed: () {
-                  vm
-                      .addEntry(controller.text)
-                      .then((value) => updateView!(title: 'Home'));
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  controller.clear();
-                },
-                icon: const Icon(Icons.send))),
+      controller: controller,
+      scrollPadding: const EdgeInsets.all(5.0),
+      decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
+      basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
+      keyboardType: TextInputType.multiline,
+      minLines: 1,
+      maxLines: 10,
+      decoration: InputDecoration(
+          enabledBorder: const OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide:
+                BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
+          ),
+          contentPadding: const EdgeInsets.only(left: 10),
+          hintText: "I want to remember...",
+          suffixIcon: IconButton(
+              onPressed: () {
+                vm
+                    .addEntry(controller.text)
+                    .then((value) => updateView!(title: 'Home'));
+                FocusManager.instance.primaryFocus?.unfocus();
+                controller.clear();
+              },
+              icon: const Icon(Icons.send))),
     );
   }
 }

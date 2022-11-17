@@ -31,13 +31,23 @@ class EntryListViewModel extends ChangeNotifier {
       DateTime? start,
       DateTime? end,
       bool trash = false}) {
-    shownEntries = entries
-        .where((entry) =>
-            entry.content.toLowerCase().contains(keyword.toLowerCase()) &&
-            entry.trash == trash)
-        .toList()
-      ..sort((b, a) => a.time
-          .compareTo(b.time)); //TODO: this sorting will have to be dynamic
+    if (keyword == '') {
+      shownEntries = entries.where((entry) => entry.trash == trash).toList();
+    } else {
+      shownEntries = entries
+          .where((entry) =>
+              // Check if [entry.content] contains any of the words in the [keyword] string
+              (entry.content
+                  .toLowerCase()
+                  .split(' ')
+                  .toSet()
+                  .intersection(keyword.toLowerCase().split(' ').toSet())
+                  .isNotEmpty) &&
+              entry.trash == trash)
+          .toList();
+    }
+    shownEntries.sort((b, a) =>
+        a.time.compareTo(b.time)); //TODO: this sorting will have to be dynamic
     for (var entry in shownEntries) {
       if (entry.trash == false) {
         tags.addAll(extractHashTags(entry.content));

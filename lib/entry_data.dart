@@ -19,7 +19,6 @@ class EntryData {
 
   Future<List<Entry>> fetchEntries() async {
     try {
-      // TODO: Add Filtering
       final file = await _localFile;
       final fileContents = await file.readAsString();
       final Iterable json = jsonDecode(fileContents);

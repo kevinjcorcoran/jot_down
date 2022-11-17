@@ -78,6 +78,12 @@ class EntryListViewState extends State<EntryListView> {
           updateView: updateView,
         )),
         Container(
+          decoration: const BoxDecoration(
+            border: Border (
+              top: BorderSide(
+                  color: Color.fromARGB(255, 212, 212, 212), width: 1)
+            )
+          ),
             padding: const EdgeInsets.all(10),
             child: NewEntryWidget(
               updateView: updateView,

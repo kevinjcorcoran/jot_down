@@ -29,7 +29,7 @@ class EntryWidget extends StatelessWidget {
         shape: RoundedRectangleBorder(
           side: const BorderSide(
               color: Color.fromARGB(255, 212, 212, 212), width: 1),
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(10),
         ),
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           HashTagText(

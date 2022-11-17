@@ -28,10 +28,12 @@ class NewEntryWidget extends StatelessWidget {
       maxLines: 10,
       decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
             borderSide:
                 BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
           ),
           focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
             borderSide:
                 BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
           ),

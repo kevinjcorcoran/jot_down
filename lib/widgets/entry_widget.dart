@@ -32,16 +32,19 @@ class EntryWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          HashTagText(
-            text: entry.content,
-            decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
-            basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
-            onTap: (tag) {
-              updateView!(title: tag, keyword: tag);
-              if (inSearch) {
-                Navigator.pop(context);
-              }
-            },
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: HashTagText(
+              text: entry.content,
+              decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
+              basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
+              onTap: (tag) {
+                updateView!(title: tag, keyword: tag);
+                if (inSearch) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
           ),
           Row(
             children: <Widget>[

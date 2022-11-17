@@ -61,6 +61,21 @@ class EntryWidget extends StatelessWidget {
                           time: entry.time,
                           trash: true);
                       updateView!(title: "Home");
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Moved Entry to Trash'),
+                        action: SnackBarAction(
+                          label: 'UNDO',
+                          onPressed: () {
+                            vm.editEntry(
+                                entry: entry,
+                                content: entry.content,
+                                time: entry.time,
+                                trash: false);
+                            updateView!(title: "Home");
+                          },
+                        ),
+                      ));
                     }),
                 IconButton(
                   padding: EdgeInsets.zero,

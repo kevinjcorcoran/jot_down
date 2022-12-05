@@ -6,7 +6,7 @@ class NewEntryWidget extends StatelessWidget {
   // The view movel used throughout the app
   final EntryListViewModel vm;
   // Updates the view model when changes are made
-  final Function({String title, String keyword})? updateView;
+  final Function({String title, String keyword, bool trash})? updateView;
   // The controller that tracks input throughout the app
   final TextEditingController controller;
 
@@ -43,7 +43,7 @@ class NewEntryWidget extends StatelessWidget {
               onPressed: () {
                 vm
                     .addEntry(controller.text)
-                    .then((value) => updateView!(title: 'Home'));
+                    .then((value) => updateView!(title: 'Home', keyword: '', trash: false));
                 FocusManager.instance.primaryFocus?.unfocus();
                 controller.clear();
               },

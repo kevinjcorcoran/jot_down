@@ -60,7 +60,7 @@ class EntryWidget extends StatelessWidget {
                           content: entry.content,
                           time: entry.time,
                           trash: true);
-                      updateView!(title: "Home");
+                      updateView!();
 
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: const Text('Moved Entry to Trash'),
@@ -72,7 +72,7 @@ class EntryWidget extends StatelessWidget {
                                 content: entry.content,
                                 time: entry.time,
                                 trash: false);
-                            updateView!(title: "Home");
+                            updateView!();
                           },
                         ),
                       ));

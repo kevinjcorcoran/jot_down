@@ -21,7 +21,7 @@ class DrawerItemsWidget extends StatelessWidget {
               leading: const Icon(Icons.home),
               title: const Text('Home', style: TextStyle(fontSize: 20)),
               onTap: () {
-                updateView!(title: 'Home');
+                updateView!(title: 'Home', keyword: '', trash: false);
                 Navigator.pop(context);
               });
         }
@@ -43,7 +43,7 @@ class DrawerItemsWidget extends StatelessWidget {
             title: Text(tag,
                 style: const TextStyle(fontSize: 20, color: Colors.blue)),
             onTap: () {
-              updateView!(title: tag, keyword: tag);
+              updateView!(title: tag, keyword: tag, trash: false);
               Navigator.pop(context);
             });
       },

@@ -15,6 +15,10 @@ class EntryListView extends StatefulWidget {
 
 class EntryListViewState extends State<EntryListView> {
   String title = 'Home'; // Header title, changed via widgets
+  String keyword = '';
+  DateTime? start;
+  DateTime? end;
+  bool trash = false;
 
   /// Controller used to track input throughout the app
   final TextEditingController controller = TextEditingController();
@@ -38,14 +42,21 @@ class EntryListViewState extends State<EntryListView> {
     /// TODO: [start] and [end] allows [FilterWidget] to filter by date
     /// [trash] allows [DrawerItemsWidget] to show entries marked as trash
     void updateView(
-        {String title = '',
-        String keyword = '',
+        {String? title,
+        String? keyword,
         DateTime? start,
         DateTime? end,
-        bool trash = false}) {
-      this.title = title;
+        bool? trash}) {
+      setState(() {
+        this.title = title ?? this.title;
+        this.keyword = keyword ?? this.keyword;
+        this.start = start ?? this.start;
+        this.end = end ?? this.end;
+        this.trash = trash ?? this.trash;
+      });
+
       entryListVm.updateShownEntries(
-          keyword: keyword, start: start, end: end, trash: trash);
+          keyword: this.keyword, start: this.start, end: this.end, trash: this.trash);
     }
 
     return Scaffold(

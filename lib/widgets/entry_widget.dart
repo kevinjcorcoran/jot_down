@@ -4,16 +4,13 @@ import 'package:jot_down/view_models/entry_list_view_model.dart';
 import 'package:jot_down/view_models/entry_view_model.dart';
 import 'package:intl/intl.dart';
 
-class EntryWidget extends StatelessWidget {
+class EntryWidget extends StatefulWidget {
   // The entry associated with this widget
   final EntryViewModel entry;
   // The view model shared by the app
   final EntryListViewModel vm;
   // Updates the view model when changes are made
   final Function({String title, String keyword, bool trash})? updateView;
-
-  final TextEditingController textEditingController = TextEditingController();
-
 
   /// Signifies if search widget is open, if so, pop the context on tag click to
   /// close the search
@@ -27,6 +24,15 @@ class EntryWidget extends StatelessWidget {
       this.inSearch = false});
 
   @override
+  State<EntryWidget> createState() => _EntryWidgetState();
+}
+
+class _EntryWidgetState extends State<EntryWidget> {
+  final TextEditingController textEditingController = TextEditingController();
+
+  late DateTime selectedDateTime;
+
+  @override
   Widget build(BuildContext context) {
     return ListTile(
         shape: RoundedRectangleBorder(
@@ -38,12 +44,12 @@ class EntryWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 5, bottom: 5),
             child: HashTagText(
-              text: entry.content,
+              text: widget.entry.content,
               decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
               basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
               onTap: (tag) {
-                updateView!(title: tag, keyword: tag);
-                if (inSearch) {
+                widget.updateView!(title: tag, keyword: tag);
+                if (widget.inSearch) {
                   Navigator.pop(context);
                 }
               },
@@ -51,16 +57,19 @@ class EntryWidget extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 5, bottom: 5),
-            child: Text(DateFormat.yMMMd().add_jm().format(entry.time)),
+            child: Text(DateFormat.yMMMd().add_jm().format(widget.entry.time)),
           )
         ]),
         onTap: () {
+          //Populate text field with entry content
           textEditingController.value = TextEditingValue(
-            text: entry.content,
+            text: widget.entry.content,
             selection: TextSelection.fromPosition(
-              TextPosition(offset: entry.content.length),
+              TextPosition(offset: widget.entry.content.length),
             )
           );
+
+          selectedDateTime = widget.entry.time;
 
           showModalBottomSheet(
               isScrollControlled: true,
@@ -72,6 +81,7 @@ class EntryWidget extends StatelessWidget {
     );
   }
 
+  //Workaround function for making entry sheet dismissible but also scrollable
   Widget makeDismissible({required Widget child, required BuildContext context}) => GestureDetector(
     behavior: HitTestBehavior.opaque,
     onTap: () => Navigator.of(context).pop(),
@@ -83,25 +93,27 @@ class EntryWidget extends StatelessWidget {
         initialChildSize: 0.6,
         minChildSize: 0.6,
         maxChildSize: 0.8,
-        builder: (_, scrollController) => Container(
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(10)
-              )
-          ),
-          padding: const EdgeInsets.all(15),
-          child: entryEditSheet(context, scrollController)
-        )
+        builder: (_, scrollController) => StatefulBuilder(
+            builder: (BuildContext context, StateSetter setSheetState) => Container(
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10)
+                    )
+                ),
+                padding: const EdgeInsets.all(15),
+                child: entryEditSheet(context, scrollController, setSheetState)
+            ))
     ),
     context: context);
-  
-  Widget entryEditSheet(BuildContext context, ScrollController scrollController) => ListView(
+
+  Widget entryEditSheet(BuildContext context, ScrollController scrollController, StateSetter setSheetState) => ListView(
     controller: scrollController,
     children: [
       sheetHandle(),
       doneEditingButton(context),
       editEntryTextField(),
+      editEntryDateTime(context, setSheetState),
       moveToTrashButton(context),
     ],
   );
@@ -124,13 +136,13 @@ class EntryWidget extends StatelessWidget {
           textStyle: const TextStyle(fontSize: 20),
         ),
         onPressed: () {
-          vm.editEntry(
-              entry: entry,
+          widget.vm.editEntry(
+              entry: widget.entry,
               content: textEditingController.text,
-              time: entry.time,
+              time: selectedDateTime,
               trash: false
           );
-          updateView!();
+          widget.updateView!();
           Navigator.pop(context);
         },
         child: const Text('DONE'),
@@ -162,35 +174,88 @@ class EntryWidget extends StatelessWidget {
     ),
   );
 
-  Widget moveToTrashButton(BuildContext context) => ElevatedButton.icon(
-    icon: const Icon(Icons.delete),
-    label: const Text("Move to Trash"),
-    onPressed: () {
-      vm.editEntry(
-        entry: entry,
-        content: entry.content,
-        time: entry.time,
-        trash: true
-      );
-      updateView!();
-
-      Navigator.pop(context);
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Moved Entry to Trash'),
-        action: SnackBarAction(
-          label: 'UNDO',
-          onPressed: () {
-            vm.editEntry(
-              entry: entry,
-              content: entry.content,
-              time: entry.time,
-              trash: false);
-            updateView!();
-          },
-        ),
-      ));
-    }
+  Widget editEntryDateTime(BuildContext context, StateSetter setSheetState) => Row(
+    mainAxisAlignment: MainAxisAlignment.center, // Center Row contents horizontally
+    crossAxisAlignment: CrossAxisAlignment.center, // Center Row contents vertically
+    children: [
+      Expanded( // Date Picker
+        child: Container(
+          margin: const EdgeInsets.only(right: 5),
+          child: ElevatedButton(
+            onPressed: () async {
+              final date = await pickDate();
+              if (date == null) return; // User clicked cancel
+              setSheetState(() {
+                selectedDateTime = DateTime(date.year, date.month, date.day, selectedDateTime.hour, selectedDateTime.minute);
+              });
+            },
+            child: Text(DateFormat.yMd().format(selectedDateTime))
+          )
+        )
+      ),
+      Expanded( // Time Picker
+        child: Container(
+          margin: const EdgeInsets.only(left: 5),
+          child: ElevatedButton(
+            onPressed: () async {
+              final time = await pickTime();
+              if (time == null) return; // User clicked cancel
+              setSheetState(() {
+                selectedDateTime = DateTime(selectedDateTime.year, selectedDateTime.month, selectedDateTime.day, time.hour, time.minute);
+              });
+            },
+            child: Text(DateFormat.jm().format(selectedDateTime))
+          )
+        )
+      )
+    ],
   );
 
+  Future<DateTime?> pickDate() => showDatePicker(
+      context: context,
+      initialDate: widget.entry.time,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100)
+  );
+
+  Future<TimeOfDay?> pickTime() => showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(widget.entry.time)
+  );
+
+  Widget moveToTrashButton(BuildContext context) => Container(
+    margin: const EdgeInsets.only(top: 10),
+    child: ElevatedButton.icon(
+        icon: const Icon(Icons.delete),
+        label: const Text("Move to Trash"),
+        onPressed: () {
+          EntryWidget trashing = widget; //Keep reference to widget for undoing trash in snackbar
+
+          widget.vm.editEntry(
+              entry: widget.entry,
+              content: widget.entry.content,
+              time: widget.entry.time,
+              trash: true
+          );
+          widget.updateView!();
+
+          Navigator.pop(context);
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('Moved Entry to Trash'),
+            action: SnackBarAction(
+              label: 'UNDO',
+              onPressed: () {
+                trashing.vm.editEntry(
+                    entry: trashing.entry,
+                    content: trashing.entry.content,
+                    time: trashing.entry.time,
+                    trash: false);
+                trashing.updateView!();
+              },
+            ),
+          ));
+        }
+    ),
+  );
 }

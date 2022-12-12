@@ -181,7 +181,9 @@ class _EntryWidgetState extends State<EntryWidget> {
       Expanded( // Date Picker
         child: Container(
           margin: const EdgeInsets.only(right: 5),
-          child: ElevatedButton(
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.edit),
+            label: Text(DateFormat.yMd().format(selectedDateTime)),
             onPressed: () async {
               final date = await pickDate();
               if (date == null) return; // User clicked cancel
@@ -189,14 +191,15 @@ class _EntryWidgetState extends State<EntryWidget> {
                 selectedDateTime = DateTime(date.year, date.month, date.day, selectedDateTime.hour, selectedDateTime.minute);
               });
             },
-            child: Text(DateFormat.yMd().format(selectedDateTime))
           )
         )
       ),
       Expanded( // Time Picker
         child: Container(
           margin: const EdgeInsets.only(left: 5),
-          child: ElevatedButton(
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.edit),
+            label: Text(DateFormat.jm().format(selectedDateTime)),
             onPressed: () async {
               final time = await pickTime();
               if (time == null) return; // User clicked cancel
@@ -204,7 +207,6 @@ class _EntryWidgetState extends State<EntryWidget> {
                 selectedDateTime = DateTime(selectedDateTime.year, selectedDateTime.month, selectedDateTime.day, time.hour, time.minute);
               });
             },
-            child: Text(DateFormat.jm().format(selectedDateTime))
           )
         )
       )

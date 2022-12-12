@@ -33,6 +33,20 @@ class _EntryWidgetState extends State<EntryWidget> {
   late DateTime selectedDateTime;
 
   @override
+  void initState() {
+    //Populate text field with entry content
+    textEditingController.value = TextEditingValue(
+        text: widget.entry.content,
+        selection: TextSelection.fromPosition(
+          TextPosition(offset: widget.entry.content.length),
+        )
+    );
+
+    selectedDateTime = widget.entry.time;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListTile(
         shape: RoundedRectangleBorder(
@@ -61,16 +75,6 @@ class _EntryWidgetState extends State<EntryWidget> {
           )
         ]),
         onTap: () {
-          //Populate text field with entry content
-          textEditingController.value = TextEditingValue(
-            text: widget.entry.content,
-            selection: TextSelection.fromPosition(
-              TextPosition(offset: widget.entry.content.length),
-            )
-          );
-
-          selectedDateTime = widget.entry.time;
-
           showModalBottomSheet(
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
@@ -111,7 +115,12 @@ class _EntryWidgetState extends State<EntryWidget> {
     controller: scrollController,
     children: [
       sheetHandle(),
-      doneEditingButton(context),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          undoChangesButton(setSheetState),
+          doneEditingButton(context)
+      ]),
       editEntryTextField(),
       editEntryDateTime(context, setSheetState),
       moveToTrashButton(context),
@@ -128,6 +137,31 @@ class _EntryWidgetState extends State<EntryWidget> {
       ),
     ),
   );
+
+  Widget undoChangesButton(StateSetter setSheetState) {
+    // If there are no changes, don't display button
+    if (widget.entry.content == textEditingController.text && widget.entry.time == selectedDateTime) {
+      return const SizedBox.shrink();
+    }
+
+    return IconButton(
+        icon: const Icon(Icons.undo),
+        color: Colors.blue,
+        onPressed: () {
+          setSheetState(() {
+            //Populate text field with entry content
+            textEditingController.value = TextEditingValue(
+                text: widget.entry.content,
+                selection: TextSelection.fromPosition(
+                  TextPosition(offset: widget.entry.content.length),
+                )
+            );
+
+            selectedDateTime = widget.entry.time;
+          });
+        }
+    );
+  }
 
   Widget doneEditingButton(BuildContext context) => Align(
       alignment: Alignment.topRight,

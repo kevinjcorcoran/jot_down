@@ -111,21 +111,32 @@ class _EntryWidgetState extends State<EntryWidget> {
     ),
     context: context);
 
-  Widget entryEditSheet(BuildContext context, ScrollController scrollController, StateSetter setSheetState) => ListView(
-    controller: scrollController,
-    children: [
-      sheetHandle(),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          undoChangesButton(setSheetState),
-          doneEditingButton(context)
-      ]),
-      editEntryTextField(),
-      editEntryDateTime(context, setSheetState),
-      moveToTrashButton(context),
-    ],
-  );
+  Widget entryEditSheet(BuildContext context, ScrollController scrollController, StateSetter setSheetState) {
+
+    List<Widget> widgetsToShow = widget.entry.trash
+        ? [
+            sheetHandle(),
+            restoreEntryButton(),
+            deleteEntryButton()
+          ]
+        : [
+            sheetHandle(),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  undoChangesButton(setSheetState),
+                  doneEditingButton(context)
+                ]),
+            editEntryTextField(),
+            editEntryDateTime(context, setSheetState),
+            moveToTrashButton(context)
+          ];
+
+    return ListView(
+      controller: scrollController,
+      children: widgetsToShow,
+    );
+  }
 
   Widget sheetHandle() => FractionallySizedBox(
     widthFactor: 0.1,
@@ -291,6 +302,56 @@ class _EntryWidgetState extends State<EntryWidget> {
               },
             ),
           ));
+        }
+    ),
+  );
+
+  Widget restoreEntryButton() => Container(
+    margin: const EdgeInsets.only(top: 10),
+    child: ElevatedButton.icon(
+        icon: const Icon(Icons.restore),
+        label: const Text("Restore"),
+        onPressed: () {
+          EntryWidget trashing = widget; //Keep reference to widget for undoing trash in snackbar
+
+          widget.vm.editEntry(
+              entry: widget.entry,
+              content: widget.entry.content,
+              time: widget.entry.time,
+              trash: false
+          );
+          widget.updateView!();
+
+          Navigator.pop(context);
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('Entry Restored'),
+            action: SnackBarAction(
+              label: 'UNDO',
+              onPressed: () {
+                trashing.vm.editEntry(
+                    entry: trashing.entry,
+                    content: trashing.entry.content,
+                    time: trashing.entry.time,
+                    trash: true);
+                trashing.updateView!();
+              },
+            ),
+          ));
+        }
+    ),
+  );
+
+  Widget deleteEntryButton()  => Container(
+    margin: const EdgeInsets.only(top: 10),
+    child: ElevatedButton.icon(
+        icon: const Icon(Icons.delete_forever),
+        label: const Text("Delete"),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+        onPressed: () {
+          widget.vm.deleteEntry(entryViewModel: widget.entry);
+          widget.updateView!();
+          Navigator.pop(context);
         }
     ),
   );

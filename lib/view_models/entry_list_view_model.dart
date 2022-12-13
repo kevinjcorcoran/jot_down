@@ -75,4 +75,8 @@ class EntryListViewModel extends ChangeNotifier {
     entry.trash = trash;
     EntryData().editEntry(entry.id, content, time, trash);
   }
+
+  Future<void> deleteEntry({required EntryViewModel entryViewModel}) async {
+    EntryData().deleteEntry(entryViewModel.id);
+  }
 }

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:jot_down/models/entry.dart';
+import 'package:jot_down/view_models/entry_view_model.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:collection/collection.dart';
 
 class EntryData {
   var uuid = const Uuid();
@@ -69,4 +71,19 @@ class EntryData {
     entry['time'] = time.toIso8601String();
     await file.writeAsString(jsonEncode(json));
   }
+
+  Future<bool> deleteEntry(String id) async {
+    var json = [];
+
+    final file = await _localFile;
+    if (await file.exists()) {
+      final fileContents = await file.readAsString();
+      json = jsonDecode(fileContents);
+    }
+
+    bool success = json.remove(json.firstWhereOrNull((entry) => entry['id'] == id));
+    await file.writeAsString(jsonEncode(json));
+    return success;
+  }
+
 }

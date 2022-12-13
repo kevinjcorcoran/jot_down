@@ -34,20 +34,24 @@ class _EntryWidgetState extends State<EntryWidget> {
 
   @override
   void initState() {
-    //Populate text field with entry content
-    textEditingController.value = TextEditingValue(
-        text: widget.entry.content,
-        selection: TextSelection.fromPosition(
-          TextPosition(offset: widget.entry.content.length),
-        )
-    );
-
-    selectedDateTime = widget.entry.time;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
+     Future.delayed(Duration.zero,(){
+      //Populate text field with entry content
+      textEditingController.value = TextEditingValue(
+        text: widget.entry.content,
+        selection: TextSelection.fromPosition(
+          TextPosition(offset: widget.entry.content.length),
+        )
+      );
+    
+      selectedDateTime = widget.entry.time;
+    });
+  
     return ListTile(
         shape: RoundedRectangleBorder(
           side: const BorderSide(
@@ -349,7 +353,7 @@ class _EntryWidgetState extends State<EntryWidget> {
         label: const Text("Delete"),
         style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
         onPressed: () {
-          widget.vm.deleteEntry(entryViewModel: widget.entry);
+          widget.vm.deleteEntry(entry: widget.entry);
           widget.updateView!();
           Navigator.pop(context);
         }

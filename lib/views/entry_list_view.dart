@@ -59,49 +59,52 @@ class EntryListViewState extends State<EntryListView> {
           keyword: this.keyword, start: this.start, end: this.end, trash: this.trash);
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              showSearch(
-                  context: context,
-                  delegate: SearchWidget(updateView: updateView));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_alt_outlined),
-            onPressed: () {
-              // TODO: Open FilterWidget
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-          child: DrawerItemsWidget(
-              updateView: updateView, tags: entryListVm.tags)),
-      body: Column(children: [
-        Expanded(
-            child: EntryListWidget(
-          vm: entryListVm,
-          updateView: updateView,
-        )),
-        Container(
-          decoration: const BoxDecoration(
-            border: Border (
-              top: BorderSide(
-                  color: Color.fromARGB(255, 212, 212, 212), width: 1)
-            )
-          ),
-            padding: const EdgeInsets.all(10),
-            child: NewEntryWidget(
-              updateView: updateView,
-              vm: entryListVm,
-              controller: controller,
-            ))
-      ]),
+    return GestureDetector (
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                    context: context,
+                    delegate: SearchWidget(updateView: updateView));
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.filter_alt_outlined),
+              onPressed: () {
+                // TODO: Open FilterWidget
+              },
+            ),
+          ],
+        ),
+        drawer: Drawer(
+            child: DrawerItemsWidget(
+                updateView: updateView, tags: entryListVm.tags)),
+        body: Column(children: [
+          Expanded(
+              child: EntryListWidget(
+            vm: entryListVm,
+            updateView: updateView,
+          )),
+          Container(
+            decoration: const BoxDecoration(
+              border: Border (
+                top: BorderSide(
+                    color: Color.fromARGB(255, 212, 212, 212), width: 1)
+              )
+            ),
+              padding: const EdgeInsets.all(10),
+              child: NewEntryWidget(
+                updateView: updateView,
+                vm: entryListVm,
+                controller: controller,
+              ))
+        ]),
+      )
     );
   }
 }

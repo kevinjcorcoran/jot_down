@@ -11,7 +11,8 @@ import 'package:jot_down/view_models/entry_view_model.dart';
 /// [tags] refers to all of the hashtagged words found in the content of the
 /// entries in [entries].
 class EntryListViewModel extends ChangeNotifier {
-  List<EntryViewModel> entries = <EntryViewModel>[];
+  List<EntryViewModel> validEntries = <EntryViewModel>[];
+  List<EntryViewModel> trashEntries = <EntryViewModel>[];
   List<EntryViewModel> shownEntries = <EntryViewModel>[];
   Set<String> tags = <String>{};
 
@@ -19,7 +20,16 @@ class EntryListViewModel extends ChangeNotifier {
   /// saved on the device.
   Future<void> fetchEntries() async {
     final results = await EntryData().fetchEntries();
-    entries = results.map((item) => EntryViewModel(entry: item)).toList();
+    validEntries = [];
+    trashEntries = [];
+    for (var item in results) {
+      EntryViewModel entry = EntryViewModel(entry: item);
+      if (entry.trash) {
+        trashEntries.add(entry);
+      } else {
+        validEntries.add(entry);
+      }
+    }
     updateShownEntries();
   }
 
@@ -31,8 +41,10 @@ class EntryListViewModel extends ChangeNotifier {
       DateTime? start,
       DateTime? end,
       bool trash = false}) {
+    List<EntryViewModel> entries = <EntryViewModel>[];
+    (trash) ? entries = trashEntries : entries = validEntries;
     if (keyword == '') {
-      shownEntries = entries.where((entry) => entry.trash == trash).toList();
+      shownEntries = entries;
     } else {
       shownEntries = entries
           .where((entry) =>
@@ -48,19 +60,29 @@ class EntryListViewModel extends ChangeNotifier {
     }
     shownEntries.sort((b, a) =>
         a.time.compareTo(b.time)); //TODO: this sorting will have to be dynamic
-    for (var entry in shownEntries) {
-      if (entry.trash == false) {
-        tags.addAll(extractHashTags(entry.content));
-      }
+
+    tags.clear();
+    for (var entry in validEntries) {
+      tags.addAll(extractHashTags(entry.content));
     }
     notifyListeners();
   }
+
+  // Need a better way to manage this stuff
+  // When something is trashed, remove it from shown entries
+  // Should tags get its info from shown entries?
+  // Problem was that when a tag was removed when editing it didn't update on tags
+  // This is because it was never removed! Only thing that removes tags is deleting entries
+  // Currently have entries and shownEntries
+  // Do we want tags to completely update every time?
+  // Could have trashEntries
+  // validEntries
 
   /// Creates a new entry and adds it to [entries] and [tags], then updates [shownEntries].
   Future<void> addEntry(String content) async {
     EntryViewModel entry =
         EntryViewModel(entry: await EntryData().addEntry(content));
-    entries.add(entry);
+    validEntries.add(entry);
     tags.addAll(extractHashTags(entry.content));
     updateShownEntries();
   }
@@ -70,13 +92,25 @@ class EntryListViewModel extends ChangeNotifier {
       required String content,
       required DateTime time,
       required bool trash}) async {
+    if (entry.trash != trash) {
+      if (trash) {
+        validEntries.remove(entry);
+        trashEntries.add(entry);
+      } else {
+        trashEntries.remove(entry);
+        validEntries.add(entry);
+      }
+      entry.trash = trash;
+    }
     entry.content = content;
     entry.time = time;
-    entry.trash = trash;
     EntryData().editEntry(entry.id, content, time, trash);
+    updateShownEntries();
   }
 
-  Future<void> deleteEntry({required EntryViewModel entryViewModel}) async {
-    EntryData().deleteEntry(entryViewModel.id);
+  Future<void> deleteEntry({required EntryViewModel entry}) async {
+    EntryData().deleteEntry(entry.id);
+    trashEntries.remove(entry);
+    updateShownEntries();
   }
 }

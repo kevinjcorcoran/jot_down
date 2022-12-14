@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jot_down/styles.dart';
 import 'package:jot_down/view_models/entry_list_view_model.dart';
 import 'package:jot_down/widgets/drawer_items_widget.dart';
 import 'package:jot_down/widgets/entry_list_widget.dart';
@@ -62,6 +63,7 @@ class EntryListViewState extends State<EntryListView> {
     return GestureDetector (
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        backgroundColor: backgroundColor,
         appBar: AppBar(
           title: Text(title),
           actions: <Widget>[
@@ -94,15 +96,18 @@ class EntryListViewState extends State<EntryListView> {
             decoration: const BoxDecoration(
               border: Border (
                 top: BorderSide(
-                    color: Color.fromARGB(255, 212, 212, 212), width: 1)
+                    color: borderColor,
+                    width: 1,
+                  )
               )
             ),
-              padding: const EdgeInsets.all(10),
-              child: NewEntryWidget(
-                updateView: updateView,
-                vm: entryListVm,
-                controller: controller,
-              ))
+            padding: const EdgeInsets.all(10),
+            child: NewEntryWidget(
+              updateView: updateView,
+              vm: entryListVm,
+              controller: controller,
+            )
+          )
         ]),
       )
     );

@@ -8,7 +8,6 @@ class SearchWidget extends SearchDelegate {
   /// Search has its own viewmodel to prevent it from affecting the rest of the 
   /// app's state
   EntryListViewModel vm = EntryListViewModel();
-
   /// Action to clear search bar
   @override
   List<Widget>? buildActions(BuildContext context) {

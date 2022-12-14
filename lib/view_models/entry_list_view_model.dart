@@ -68,16 +68,6 @@ class EntryListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Need a better way to manage this stuff
-  // When something is trashed, remove it from shown entries
-  // Should tags get its info from shown entries?
-  // Problem was that when a tag was removed when editing it didn't update on tags
-  // This is because it was never removed! Only thing that removes tags is deleting entries
-  // Currently have entries and shownEntries
-  // Do we want tags to completely update every time?
-  // Could have trashEntries
-  // validEntries
-
   /// Creates a new entry and adds it to [entries] and [tags], then updates [shownEntries].
   Future<void> addEntry(String content) async {
     EntryViewModel entry =

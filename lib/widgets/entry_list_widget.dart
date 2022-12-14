@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jot_down/styles.dart';
 import 'package:jot_down/view_models/entry_list_view_model.dart';
 import 'package:jot_down/view_models/entry_view_model.dart';
 import 'package:jot_down/widgets/entry_widget.dart';
@@ -31,8 +32,11 @@ class EntryListWidget extends StatelessWidget {
           );
         },
         // Space between entries
-        separatorBuilder: (context, index) => const SizedBox(
-              height: 7,
+        separatorBuilder: (context, index) => const Divider(
+              thickness: 2,
+              indent: 5,
+              endIndent: 5,
+              color: borderColor
             ));
   }
 }

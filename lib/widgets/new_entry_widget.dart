@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hashtagable/widgets/hashtag_text_field.dart';
+import 'package:jot_down/styles.dart';
 import 'package:jot_down/view_models/entry_list_view_model.dart';
 
 class NewEntryWidget extends StatelessWidget {
@@ -19,31 +20,30 @@ class NewEntryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HashTagTextField(
+      cursorColor: tagColor,
       controller: controller,
       scrollPadding: const EdgeInsets.all(5.0),
-      decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
-      basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
+      decoratedStyle: bodyAccentText,
+      basicStyle: bodyText,
       keyboardType: TextInputType.multiline,
       minLines: 1,
       maxLines: 10,
       decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide:
-                BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
+            borderSide: BorderSide(color: borderColor, width: 1),
           ),
           focusedBorder: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide:
-                BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
+            borderSide: BorderSide(color: borderColor, width: 1),
           ),
           contentPadding: const EdgeInsets.only(left: 10),
           hintText: "I want to remember...",
           suffixIcon: IconButton(
+              color: secondaryTextColor,
               onPressed: () {
-                vm
-                    .addEntry(controller.text)
-                    .then((value) => updateView!(title: 'Home', keyword: '', trash: false));
+                vm.addEntry(controller.text).then((value) =>
+                    updateView!(title: 'Home', keyword: '', trash: false));
                 FocusManager.instance.primaryFocus?.unfocus();
                 controller.clear();
               },

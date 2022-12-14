@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jot_down/styles.dart';
 
 class DrawerItemsWidget extends StatelessWidget {
   /// The set of tags to show in the drawer
@@ -19,7 +20,7 @@ class DrawerItemsWidget extends StatelessWidget {
           return ListTile(
               minLeadingWidth: 10,
               leading: const Icon(Icons.home),
-              title: const Text('Home', style: TextStyle(fontSize: 20)),
+              title: const Text('Home', style: headingText),
               onTap: () {
                 updateView!(title: 'Home', keyword: '', trash: false);
                 Navigator.pop(context);
@@ -30,7 +31,7 @@ class DrawerItemsWidget extends StatelessWidget {
           return ListTile(
               minLeadingWidth: 10,
               leading: const Icon(Icons.delete),
-              title: const Text('Trash', style: TextStyle(fontSize: 20)),
+              title: const Text('Trash', style: headingText),
               onTap: () {
                 updateView!(title: 'Trash', trash: true);
                 Navigator.pop(context);
@@ -41,7 +42,7 @@ class DrawerItemsWidget extends StatelessWidget {
         String tag = tags.elementAt(index);
         return ListTile(
             title: Text(tag,
-                style: const TextStyle(fontSize: 20, color: Colors.blue)),
+                style: headingAccentText),
             onTap: () {
               updateView!(title: tag, keyword: tag, trash: false);
               Navigator.pop(context);

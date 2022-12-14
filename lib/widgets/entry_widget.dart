@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hashtagable/hashtagable.dart';
+import 'package:jot_down/styles.dart';
 import 'package:jot_down/view_models/entry_list_view_model.dart';
 import 'package:jot_down/view_models/entry_view_model.dart';
 import 'package:intl/intl.dart';
@@ -28,13 +31,14 @@ class EntryWidget extends StatefulWidget {
 }
 
 class _EntryWidgetState extends State<EntryWidget> {
-  final TextEditingController textEditingController = TextEditingController();
+  late TextEditingController textEditingController;
 
   late DateTime selectedDateTime;
 
   @override
   void initState() {
     super.initState();
+    textEditingController = TextEditingController();
   }
 
   @override
@@ -53,18 +57,18 @@ class _EntryWidgetState extends State<EntryWidget> {
     });
   
     return ListTile(
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(
-              color: Color.fromARGB(255, 212, 212, 212), width: 1),
-          borderRadius: BorderRadius.circular(10),
-        ),
+        //shape: RoundedRectangleBorder(
+        //  side: const BorderSide(
+        //      color: Color.fromARGB(255, 212, 212, 212), width: 1),
+        //  borderRadius: BorderRadius.circular(10),
+        //),
         title: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Padding(
             padding: const EdgeInsets.only(top: 5, bottom: 5),
             child: HashTagText(
               text: widget.entry.content,
-              decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
-              basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
+              decoratedStyle: bodyAccentText,
+              basicStyle: bodyText,
               onTap: (tag) {
                 widget.updateView!(title: tag, keyword: tag);
                 if (widget.inSearch) {
@@ -75,17 +79,30 @@ class _EntryWidgetState extends State<EntryWidget> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 5, bottom: 5),
-            child: Text(DateFormat.yMMMd().add_jm().format(widget.entry.time)),
-          )
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  DateFormat.yMMMd().add_jm().format(widget.entry.time),
+                  style: dateText,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.more_horiz),
+                  onPressed: () {
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (BuildContext context) => buildEntryEditSheet(context)
+                    );
+                  },
+                  padding: const EdgeInsets.only(left: 5),
+                  constraints: const BoxConstraints(),
+                )
+              ],
+           )
+          ),
         ]),
-        onTap: () {
-          showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              context: context,
-              builder: (BuildContext context) => buildEntryEditSheet(context)
-          );
-        }
     );
   }
 
@@ -98,13 +115,13 @@ class _EntryWidgetState extends State<EntryWidget> {
 
   Widget buildEntryEditSheet(BuildContext context) => makeDismissible(
       child: DraggableScrollableSheet(
-        initialChildSize: 0.6,
+        initialChildSize: 0.65,
         minChildSize: 0.6,
         maxChildSize: 0.8,
         builder: (_, scrollController) => StatefulBuilder(
             builder: (BuildContext context, StateSetter setSheetState) => Container(
                 decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: panelColor,
                     borderRadius: BorderRadius.vertical(
                         top: Radius.circular(10)
                     )
@@ -133,7 +150,7 @@ class _EntryWidgetState extends State<EntryWidget> {
                 ]),
             editEntryTextField(),
             editEntryDateTime(context, setSheetState),
-            moveToTrashButton(context)
+            moveToTrashButton(context),
           ];
 
     return ListView(
@@ -155,13 +172,13 @@ class _EntryWidgetState extends State<EntryWidget> {
 
   Widget undoChangesButton(StateSetter setSheetState) {
     // If there are no changes, don't display button
-    if (widget.entry.content == textEditingController.text && widget.entry.time == selectedDateTime) {
+    if (widget.entry.content.toString() == textEditingController.text.toString() && widget.entry.time == selectedDateTime) {
       return const SizedBox.shrink();
     }
 
     return IconButton(
+        color: tagColor,
         icon: const Icon(Icons.undo),
-        color: Colors.blue,
         onPressed: () {
           setSheetState(() {
             //Populate text field with entry content
@@ -181,9 +198,6 @@ class _EntryWidgetState extends State<EntryWidget> {
   Widget doneEditingButton(BuildContext context) => Align(
       alignment: Alignment.topRight,
       child: TextButton(
-        style: TextButton.styleFrom(
-          textStyle: const TextStyle(fontSize: 20),
-        ),
         onPressed: () {
           widget.vm.editEntry(
               entry: widget.entry,
@@ -194,7 +208,7 @@ class _EntryWidgetState extends State<EntryWidget> {
           widget.updateView!();
           Navigator.pop(context);
         },
-        child: const Text('DONE'),
+        child: const Text('DONE', style: bodyAccentText),
       )
 
   );
@@ -202,8 +216,8 @@ class _EntryWidgetState extends State<EntryWidget> {
   Widget editEntryTextField() => HashTagTextField(
     controller: textEditingController,
     scrollPadding: const EdgeInsets.all(5.0),
-    decoratedStyle: const TextStyle(fontSize: 20, color: Colors.blue),
-    basicStyle: const TextStyle(fontSize: 20, color: Colors.black),
+    decoratedStyle: bodyAccentText,
+    basicStyle: bodyText,
     keyboardType: TextInputType.multiline,
     minLines: 1,
     maxLines: 10,
@@ -211,12 +225,12 @@ class _EntryWidgetState extends State<EntryWidget> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
           borderSide:
-          BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
+          BorderSide(color: borderColor, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
           borderSide:
-          BorderSide(color: Color.fromARGB(255, 212, 212, 212), width: 1),
+          BorderSide(color: borderColor, width: 1),
         ),
         contentPadding: EdgeInsets.only(left: 10),
         hintText: "Edit entry"
@@ -231,6 +245,7 @@ class _EntryWidgetState extends State<EntryWidget> {
         child: Container(
           margin: const EdgeInsets.only(right: 5),
           child: ElevatedButton.icon(
+            style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor)),
             icon: const Icon(Icons.edit),
             label: Text(DateFormat.yMd().format(selectedDateTime)),
             onPressed: () async {
@@ -247,6 +262,7 @@ class _EntryWidgetState extends State<EntryWidget> {
         child: Container(
           margin: const EdgeInsets.only(left: 5),
           child: ElevatedButton.icon(
+            style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor)),
             icon: const Icon(Icons.edit),
             label: Text(DateFormat.jm().format(selectedDateTime)),
             onPressed: () async {
@@ -263,20 +279,46 @@ class _EntryWidgetState extends State<EntryWidget> {
   );
 
   Future<DateTime?> pickDate() => showDatePicker(
+
       context: context,
       initialDate: widget.entry.time,
       firstDate: DateTime(1900),
-      lastDate: DateTime(2100)
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+              primaryColor: tagColor,
+              colorScheme: const ColorScheme.dark(primary: tagColor),
+              buttonTheme: const ButtonThemeData(
+                textTheme: ButtonTextTheme.normal
+              ),
+          ),
+          child: child!,
+        );
+      },
   );
 
   Future<TimeOfDay?> pickTime() => showTimePicker(
       context: context,
-      initialTime: TimeOfDay.fromDateTime(widget.entry.time)
+      initialTime: TimeOfDay.fromDateTime(widget.entry.time),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+              primaryColor: tagColor,
+              colorScheme: const ColorScheme.dark(primary: tagColor),
+              buttonTheme: const ButtonThemeData(
+                textTheme: ButtonTextTheme.normal
+              ),
+          ),
+          child: child!,
+        );
+      },
   );
 
   Widget moveToTrashButton(BuildContext context) => Container(
     margin: const EdgeInsets.only(top: 10),
     child: ElevatedButton.icon(
+        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor)),
         icon: const Icon(Icons.delete),
         label: const Text("Move to Trash"),
         onPressed: () {
@@ -313,6 +355,7 @@ class _EntryWidgetState extends State<EntryWidget> {
   Widget restoreEntryButton() => Container(
     margin: const EdgeInsets.only(top: 10),
     child: ElevatedButton.icon(
+        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor)),
         icon: const Icon(Icons.restore),
         label: const Text("Restore"),
         onPressed: () {

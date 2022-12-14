@@ -35,8 +35,8 @@ class _FilterWidgetState extends State<FilterWidget> {
         children: [
           doneFilteringButton(context),
           // TODO: ADD SORT ASC DESC CHOOSER HERE
-          pickDate(context, stateSetter, "Start Date:", startDate),
-          pickDate(context, stateSetter, "End Date:", endDate),
+          pickStartDate(context, stateSetter),
+          pickEndDate(context, stateSetter),
           clearFilteringButton(context),
         ],
       ),
@@ -59,17 +59,14 @@ class _FilterWidgetState extends State<FilterWidget> {
   // Use onChanged to call updateView(sortAsc: true) for Ascending, 
   // and updateView(sortAsc: false) for Descending
 
-  Widget pickDate(BuildContext context, StateSetter stateSetter, String option,
-          DateTime dateOption) =>
+  Widget pickStartDate(BuildContext context, StateSetter stateSetter) =>
       ListTile(
         contentPadding: const EdgeInsets.fromLTRB(15, 0, 10, 15),
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 10), 
-          child: Text(option, style: bodyText,)
+        title: const Padding(
+          padding: EdgeInsets.only(bottom: 10), 
+          child: Text("Start Date:", style: bodyText,)
         ),
-        subtitle: Expanded(
-            // Start Date Picker
-            child: Container(
+        subtitle: Container(
                 margin: const EdgeInsets.only(right: 5),
                 child: ElevatedButton.icon(
                   style: const ButtonStyle(
@@ -78,16 +75,44 @@ class _FilterWidgetState extends State<FilterWidget> {
                       padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.fromLTRB(0, 10, 0, 10))
                   ),
                   icon: const Icon(Icons.edit),
-                  label: Text(DateFormat.yMd().format(dateOption), style: buttonText),
+                  label: Text(DateFormat.yMd().format(startDate), style: buttonText),
                   onPressed: () async {
-                    final date = await datePicker(dateOption);
+                    final date = await datePicker(startDate);
                     if (date == null) return; // User clicked cancel
                     stateSetter(() {
-                      dateOption = DateTime(date.year, date.month, date.day,
-                          dateOption.hour, dateOption.minute);
+                      startDate = DateTime(date.year, date.month, date.day,
+                          startDate.hour, startDate.minute);
                     });
                   },
-                ))),
+                )),
+      );
+
+  Widget pickEndDate(BuildContext context, StateSetter stateSetter) =>
+      ListTile(
+        contentPadding: const EdgeInsets.fromLTRB(15, 0, 10, 15),
+        title: const Padding(
+          padding: EdgeInsets.only(bottom: 10), 
+          child: Text("Start Date:", style: bodyText,)
+        ),
+        subtitle: Container(
+                margin: const EdgeInsets.only(right: 5),
+                child: ElevatedButton.icon(
+                  style: const ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll<Color>(backgroundColor),
+                      padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.fromLTRB(0, 10, 0, 10))
+                  ),
+                  icon: const Icon(Icons.edit),
+                  label: Text(DateFormat.yMd().format(endDate), style: buttonText),
+                  onPressed: () async {
+                    final date = await datePicker(endDate);
+                    if (date == null) return; // User clicked cancel
+                    stateSetter(() {
+                      endDate = DateTime(date.year, date.month, date.day,
+                          endDate.hour, endDate.minute);
+                    });
+                  },
+                )),
       );
 
   Future<DateTime?> datePicker(initDate) => showDatePicker(

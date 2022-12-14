@@ -64,8 +64,8 @@ class EntryListViewModel extends ChangeNotifier {
               // Check if [entry.content] contains any of the words in the [keyword] string
               (entry.trash == trash)
               // Check if the entry is between the time constraints
-              && (entry.time.compareTo(start!) >= 0)
-              && (entry.time.compareTo(end!) <= 0))
+              && (entry.time.compareTo(start) >= 0)
+              && (entry.time.compareTo(end) <= 0))
           .toList();
     } else {
       shownEntries = entries

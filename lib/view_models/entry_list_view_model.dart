@@ -58,11 +58,26 @@ class EntryListViewModel extends ChangeNotifier {
                   .isNotEmpty)
               && (entry.trash == trash))
           .toList();
-    } else {
+    } else if (keyword == '' && start != null && end != null) {
         shownEntries = entries
           .where((entry) =>
               // Check if [entry.content] contains any of the words in the [keyword] string
               (entry.trash == trash)
+              // Check if the entry is between the time constraints
+              && (entry.time.compareTo(start!) >= 0)
+              && (entry.time.compareTo(end!) <= 0))
+          .toList();
+    } else {
+      shownEntries = entries
+          .where((entry) =>
+            (entry.content
+                  .toLowerCase()
+                  .split(' ')
+                  .toSet()
+                  .intersection(keyword.toLowerCase().split(' ').toSet())
+                  .isNotEmpty)
+              // Check if [entry.content] contains any of the words in the [keyword] string
+              && (entry.trash == trash)
               // Check if the entry is between the time constraints
               && (entry.time.compareTo(start!) >= 0)
               && (entry.time.compareTo(end!) <= 0))

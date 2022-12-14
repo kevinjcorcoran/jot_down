@@ -40,12 +40,13 @@ class EntryListViewModel extends ChangeNotifier {
       {String keyword = '',
       DateTime? start,
       DateTime? end,
+      bool sortAsc = false,
       bool trash = false}) {
     List<EntryViewModel> entries = <EntryViewModel>[];
     (trash) ? entries = trashEntries : entries = validEntries;
-    if (keyword == '') {
+    if (keyword == '' && start == null && end == null) {
       shownEntries = entries;
-    } else {
+    } else if (start == null && end == null) {
       shownEntries = entries
           .where((entry) =>
               // Check if [entry.content] contains any of the words in the [keyword] string
@@ -54,12 +55,28 @@ class EntryListViewModel extends ChangeNotifier {
                   .split(' ')
                   .toSet()
                   .intersection(keyword.toLowerCase().split(' ').toSet())
-                  .isNotEmpty) &&
-              entry.trash == trash)
+                  .isNotEmpty)
+              && (entry.trash == trash))
+          .toList();
+    } else {
+        shownEntries = entries
+          .where((entry) =>
+              // Check if [entry.content] contains any of the words in the [keyword] string
+              (entry.trash == trash)
+              // Check if the entry is between the time constraints
+              && (entry.time.compareTo(start!) >= 0)
+              && (entry.time.compareTo(end!) <= 0))
           .toList();
     }
-    shownEntries.sort((b, a) =>
-        a.time.compareTo(b.time)); //TODO: this sorting will have to be dynamic
+
+    if (sortAsc) {
+      shownEntries.sort((a, b) =>
+        a.time.compareTo(b.time));
+    } else 
+    {
+      shownEntries.sort((b, a) =>
+        a.time.compareTo(b.time));
+    }
 
     tags.clear();
     for (var entry in validEntries) {

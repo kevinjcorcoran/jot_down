@@ -12,6 +12,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        snackBarTheme: const SnackBarThemeData(
+          backgroundColor: panelColor,
+          actionTextColor: tagColor,
+          contentTextStyle: buttonText
+        ),
         brightness: Brightness.dark,
         textTheme: const TextTheme(
           displayLarge: headingText,

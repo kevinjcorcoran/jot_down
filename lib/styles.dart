@@ -16,3 +16,5 @@ const bodyText = TextStyle(fontSize: 18, color: textColor);
 const bodyAccentText = TextStyle(fontSize: 18, color: tagColor);
 // Date Text Styles
 const dateText = TextStyle(fontSize: 16, color: secondaryTextColor);
+// Button Text
+const buttonText = TextStyle(fontSize: 16, color: textColor);

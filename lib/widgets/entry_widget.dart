@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:hashtagable/hashtagable.dart';
 import 'package:jot_down/styles.dart';
@@ -237,45 +235,54 @@ class _EntryWidgetState extends State<EntryWidget> {
     ),
   );
 
-  Widget editEntryDateTime(BuildContext context, StateSetter setSheetState) => Row(
-    mainAxisAlignment: MainAxisAlignment.center, // Center Row contents horizontally
-    crossAxisAlignment: CrossAxisAlignment.center, // Center Row contents vertically
-    children: [
-      Expanded( // Date Picker
-        child: Container(
-          margin: const EdgeInsets.only(right: 5),
-          child: ElevatedButton.icon(
-            style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor)),
-            icon: const Icon(Icons.edit),
-            label: Text(DateFormat.yMd().format(selectedDateTime)),
-            onPressed: () async {
-              final date = await pickDate();
-              if (date == null) return; // User clicked cancel
-              setSheetState(() {
-                selectedDateTime = DateTime(date.year, date.month, date.day, selectedDateTime.hour, selectedDateTime.minute);
-              });
-            },
+  Widget editEntryDateTime(BuildContext context, StateSetter setSheetState) => Padding(
+    padding: const EdgeInsets.only(top: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center, // Center Row contents horizontally
+      crossAxisAlignment: CrossAxisAlignment.center, // Center Row contents vertically
+      children: [
+        Expanded( // Date Picker
+          child: Container(
+            margin: const EdgeInsets.only(right: 5),
+            child: ElevatedButton.icon(
+              style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor),
+                padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.fromLTRB(0, 10, 0, 10))
+              ),
+              icon: const Icon(Icons.edit),
+              label: Text(DateFormat.yMd().format(selectedDateTime), style: buttonText),
+              onPressed: () async {
+                final date = await pickDate();
+                if (date == null) return; // User clicked cancel
+                setSheetState(() {
+                  selectedDateTime = DateTime(date.year, date.month, date.day, selectedDateTime.hour, selectedDateTime.minute);
+                });
+              },
+            )
+          )
+        ),
+        Expanded( // Time Picker
+          child: Container(
+            margin: const EdgeInsets.only(left: 5),
+            child: ElevatedButton.icon(
+              style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor),
+                padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.fromLTRB(0, 10, 0, 10))
+              ),
+              icon: const Icon(Icons.edit),
+              label: Text(DateFormat.jm().format(selectedDateTime), style: buttonText),
+              onPressed: () async {
+                final time = await pickTime();
+                if (time == null) return; // User clicked cancel
+                setSheetState(() {
+                  selectedDateTime = DateTime(selectedDateTime.year, selectedDateTime.month, selectedDateTime.day, time.hour, time.minute);
+                });
+              },
+            )
           )
         )
-      ),
-      Expanded( // Time Picker
-        child: Container(
-          margin: const EdgeInsets.only(left: 5),
-          child: ElevatedButton.icon(
-            style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor)),
-            icon: const Icon(Icons.edit),
-            label: Text(DateFormat.jm().format(selectedDateTime)),
-            onPressed: () async {
-              final time = await pickTime();
-              if (time == null) return; // User clicked cancel
-              setSheetState(() {
-                selectedDateTime = DateTime(selectedDateTime.year, selectedDateTime.month, selectedDateTime.day, time.hour, time.minute);
-              });
-            },
-          )
-        )
-      )
-    ],
+      ],
+    )
   );
 
   Future<DateTime?> pickDate() => showDatePicker(
@@ -318,9 +325,12 @@ class _EntryWidgetState extends State<EntryWidget> {
   Widget moveToTrashButton(BuildContext context) => Container(
     margin: const EdgeInsets.only(top: 10),
     child: ElevatedButton.icon(
-        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor)),
+        style: const ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor),
+          padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.fromLTRB(0, 10, 0, 10))
+        ),
         icon: const Icon(Icons.delete),
-        label: const Text("Move to Trash"),
+        label: const Text("Move to Trash", style: buttonText),
         onPressed: () {
           EntryWidget trashing = widget; //Keep reference to widget for undoing trash in snackbar
 
@@ -355,9 +365,12 @@ class _EntryWidgetState extends State<EntryWidget> {
   Widget restoreEntryButton() => Container(
     margin: const EdgeInsets.only(top: 10),
     child: ElevatedButton.icon(
-        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor)),
+        style: const ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll<Color>(backgroundColor),
+          padding: MaterialStatePropertyAll<EdgeInsetsGeometry>(EdgeInsets.fromLTRB(0, 10, 0, 10))
+        ),
         icon: const Icon(Icons.restore),
-        label: const Text("Restore"),
+        label: const Text("Restore", style: buttonText),
         onPressed: () {
           EntryWidget trashing = widget; //Keep reference to widget for undoing trash in snackbar
 
@@ -393,8 +406,11 @@ class _EntryWidgetState extends State<EntryWidget> {
     margin: const EdgeInsets.only(top: 10),
     child: ElevatedButton.icon(
         icon: const Icon(Icons.delete_forever),
-        label: const Text("Delete"),
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+        label: const Text("Delete", style: buttonText),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10)
+        ),
         onPressed: () {
           widget.vm.deleteEntry(entry: widget.entry);
           widget.updateView!();

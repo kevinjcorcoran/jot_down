@@ -169,15 +169,17 @@ class _EntryWidgetState extends State<EntryWidget> {
   );
 
   Widget undoChangesButton(StateSetter setSheetState) {
-    // If there are no changes, don't display button
-    if (widget.entry.content.toString() == textEditingController.text.toString() && widget.entry.time == selectedDateTime) {
-      return const SizedBox.shrink();
+    bool changes = widget.entry.content.toString() == textEditingController.text.toString() && widget.entry.time == selectedDateTime;
+    Color displayColor = tagColor;
+    // If there are no changes, display grey
+    if (changes) {
+      displayColor = borderColor;
     }
 
     return IconButton(
-        color: tagColor,
+        color: displayColor,
         icon: const Icon(Icons.undo),
-        onPressed: () {
+        onPressed: changes ? null : () {
           setSheetState(() {
             //Populate text field with entry content
             textEditingController.value = TextEditingValue(

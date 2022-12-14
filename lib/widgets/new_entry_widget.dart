@@ -40,7 +40,7 @@ class NewEntryWidget extends StatelessWidget {
           contentPadding: const EdgeInsets.only(left: 10),
           hintText: "I want to remember...",
           suffixIcon: IconButton(
-              color: secondaryTextColor,
+              color: tagColor,
               onPressed: () {
                 vm.addEntry(controller.text).then((value) =>
                     updateView!(title: 'Home', keyword: '', trash: false));

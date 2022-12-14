@@ -42,8 +42,10 @@ class NewEntryWidget extends StatelessWidget {
           suffixIcon: IconButton(
               color: tagColor,
               onPressed: () {
-                vm.addEntry(controller.text).then((value) =>
-                    updateView!(title: 'Home', keyword: '', trash: false));
+                if (controller.text.isNotEmpty) {
+                    vm.addEntry(controller.text).then((value) =>
+                      updateView!(title: 'Home', keyword: '', trash: false));
+                }
                 FocusManager.instance.primaryFocus?.unfocus();
                 controller.clear();
               },

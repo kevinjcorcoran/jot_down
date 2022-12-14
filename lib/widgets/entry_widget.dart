@@ -210,7 +210,6 @@ class _EntryWidgetState extends State<EntryWidget> {
         },
         child: const Text('DONE', style: bodyAccentText),
       )
-
   );
 
   Widget editEntryTextField() => HashTagTextField(
